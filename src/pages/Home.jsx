@@ -11,8 +11,8 @@ export default class Home extends Component {
       // error: null,
       authenticated: false,
       userData: {},
-      topTracks: [],
-      topArtists: [],
+      tracksData: {},
+      artistsData: {},
     };
   }
 
@@ -37,8 +37,8 @@ export default class Home extends Component {
           authenticated: true,
           user: responseJson.user,
           userData: responseJson.userData,
-          topTracks: responseJson.topTracks,
-          topArtists: responseJson.topArtists,
+          tracksData: responseJson.tracksData,
+          artistsData: responseJson.artistsData,
         });
       })
       .catch((error) => {
@@ -55,7 +55,9 @@ export default class Home extends Component {
   };
 
   render() {
-    const { authenticated, userData, topArtists, topTracks, user } = this.state;
+    const { authenticated, userData, artistsData, tracksData, user } = this.state;
+    const { tracks } = tracksData;
+    const { artists, aggGenres } = artistsData;
     return (
       <div>
         <Header
@@ -72,14 +74,31 @@ export default class Home extends Component {
               <h2>{`id: ${user.spotifyId}`}</h2>
               <h3>{`Followers: ${userData.followers.total}`}</h3>
               <img alt="profile" src={userData.images[0].url} />
+              <p>{`Top artists average followers: ${artistsData.avgFollowers}`}</p>
+              <p>{`Top artists average popularity: ${artistsData.avgPopularity}`}</p>
+              <div>
+                <p>Top Genres</p>
+                <ol>
+                  {aggGenres.slice(0, 5).map((genre) => (
+                    <li key={`${genre[0]}`}>{`${genre[0]}  ${genre[1]}`}</li>
+                  ))}
+                </ol>
+              </div>
               <ol>
-                {topArtists.map((x) => (
-                  <li key={`artist-${x.name}`}>{x.name}</li>
+                {artists.map((x) => (
+                  <li
+                    key={`artist-${x.name}`}
+                  >{`${x.name}    ${x.followers.total}   ${x.popularity}    ${x.genres}`}</li>
                 ))}
               </ol>
+              <p>{`Top tracks average duration: ${tracksData.avgDuration}`}</p>
+              <p>{`Top tracks average popularity: ${tracksData.avgPopularity}`}</p>
+              <p>{`Top tracks percent explicit: ${tracksData.pctExplicit}`}</p>
               <ol>
-                {topTracks.map((x) => (
-                  <li key={`track-${x.name}`}>{`${x.name} - ${x.artists[0].name}`}</li>
+                {tracks.map((x) => (
+                  <li
+                    key={`track-${x.name}`}
+                  >{`${x.name} - ${x.artists[0].name}    ${x.duration_ms}    ${x.explicit}    ${x.popularity}`}</li>
                 ))}
               </ol>
             </div>
