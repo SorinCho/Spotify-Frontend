@@ -19,6 +19,28 @@ export default class Home extends Component {
 
   componentDidMount() {
     // Fetch does not send cookies. So you should add credentials: 'include'
+    this.handleUpdate();
+  }
+
+  handleNotAuthenticated = () => {
+    this.setState({ authenticated: false });
+  };
+
+  handleLimitClick(limit) {
+    this.setState({ limit }, this.handleUpdate);
+    // this.helper();
+  }
+
+  handleTimeRangeClick(timeRange) {
+    this.setState({ timeRange }, this.handleUpdate);
+  }
+
+  // helper() {
+  //   const { limit } = this.state;
+  //   console.log(limit);
+  // }
+
+  handleUpdate() {
     const { limit, timeRange } = this.state;
     const data = { limit, timeRange };
     console.log(data);
@@ -54,10 +76,6 @@ export default class Home extends Component {
       });
   }
 
-  handleNotAuthenticated = () => {
-    this.setState({ authenticated: false });
-  };
-
   render() {
     const { authenticated, userData, artistsData, tracksData } = this.state;
     const { tracks } = tracksData;
@@ -77,6 +95,28 @@ export default class Home extends Component {
               <h2>{`Welcome ${userData.display_name}!`}</h2>
               {/* <h3>{`Followers: ${userData.followers.total}`}</h3> */}
               <img alt="profile" src={userData.images[0].url} style={{ width: '100px' }} />
+              <div>
+                <button type="button" onClick={() => this.handleLimitClick(10)}>
+                  10
+                </button>
+                <button type="button" onClick={() => this.handleLimitClick(20)}>
+                  20
+                </button>
+                <button type="button" onClick={() => this.handleLimitClick(50)}>
+                  50
+                </button>
+              </div>
+              <div>
+                <button type="button" onClick={() => this.handleTimeRangeClick('short_term')}>
+                  1 month
+                </button>
+                <button type="button" onClick={() => this.handleTimeRangeClick('medium_term')}>
+                  3 months
+                </button>
+                <button type="button" onClick={() => this.handleTimeRangeClick('long_term')}>
+                  6 months
+                </button>
+              </div>
               <div>
                 <h3>Artists</h3>
                 <div>
