@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './Header.scss';
 
@@ -24,18 +24,18 @@ export default class Header extends Component {
     const { authenticated } = this.props;
     return (
       <ul className="menu">
-        <li>
+        {/* <li>
           <Link to="/">Home</Link>
-        </li>
+        </li> */}
         {authenticated ? (
           <li>
-            <button type="button" onClick={this.handleLogoutClick}>
+            <button id="logout" type="button" onClick={this.handleLogoutClick}>
               Logout
             </button>
           </li>
         ) : (
           <li>
-            <button type="button" onClick={this.handleSignInClick}>
+            <button id="login" type="button" onClick={this.handleSignInClick}>
               Login
             </button>
           </li>
