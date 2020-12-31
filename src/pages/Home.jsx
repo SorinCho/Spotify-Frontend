@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import Dropdown from 'react-dropdown';
 import Header from '../components/Header';
+import PopularitySwarmPlot from '../components/PopularitySwarmPlot';
+import FollowersSwarmPlot from '../components/FollowersSwarmPlot';
+import TracksPopularitySwarmPlot from '../components/TracksPopularitySwarmPlot';
+import DurationSwarmPlot from '../components/DurationSwarmPlot';
 import './Home.scss';
 
 import 'react-dropdown/style.css';
@@ -106,6 +110,7 @@ export default class Home extends Component {
     } = this.state;
     const { tracks } = tracksData;
     const { artists, aggGenres } = artistsData;
+    console.log(tracks);
     return (
       <div className="big-wrapper">
         <div>
@@ -119,7 +124,7 @@ export default class Home extends Component {
               <img
                 alt="profile"
                 src={userData.images[0].url}
-                style={{ width: '100px' }}
+                style={{ width: '0px' }}
               />
               <div id="select-bar">
                 <div className="select-text">Top</div>
@@ -128,12 +133,26 @@ export default class Home extends Component {
                   value={limitOptions[1]}
                   onChange={(e) => this.handleLimitClick(e)}
                   placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
                 />
                 <Dropdown
                   options={viewOptions}
                   value={viewOptions[0]}
                   onChange={(e) => this.handleViewClick(e)}
                   placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
                 />
                 <div className="select-text">Last</div>
                 <Dropdown
@@ -141,10 +160,27 @@ export default class Home extends Component {
                   value={timeOptions[1]}
                   onChange={(e) => this.handleTimeRangeClick(e)}
                   placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control dropdown-control-limit"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
                 />
               </div>
               {view === 'artists' ? (
                 <div>
+                  <div>
+                    <p>{`Average followers: ${artistsData.avgFollowers}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <FollowersSwarmPlot data={artists} />
+                    </div>
+                    <p>{`Average popularity: ${artistsData.avgPopularity}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <PopularitySwarmPlot data={artists} />
+                    </div>
+                  </div>
                   <div>
                     <ol>
                       {artists.map((x) => (
@@ -154,10 +190,6 @@ export default class Home extends Component {
                         <li key={`artist-${x.name}`}>{`${x.name}`}</li>
                       ))}
                     </ol>
-                  </div>
-                  <div>
-                    <p>{`Average followers: ${artistsData.avgFollowers}`}</p>
-                    <p>{`Average popularity: ${artistsData.avgPopularity}`}</p>
                   </div>
                   <div>
                     <p>Top Genres</p>
@@ -173,6 +205,17 @@ export default class Home extends Component {
               ) : (
                 <div>
                   <div>
+                    <p>{`Average duration: ${tracksData.avgDuration}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <DurationSwarmPlot data={tracks} />
+                    </div>
+                    <p>{`Average popularity: ${tracksData.avgPopularity}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <TracksPopularitySwarmPlot data={tracks} />
+                    </div>
+                    <p>{`Percent explicit: ${tracksData.pctExplicit}`}</p>
+                  </div>
+                  <div>
                     <ol>
                       {tracks.map((x) => (
                         // <li
@@ -183,14 +226,11 @@ export default class Home extends Component {
                         <li
                           key={`track-${x.name}`}
                           className={`${x.explicit}`}
-                        >{`${x.name} - ${x.artists[0].name}`}</li>
+                        >{`${x.name} - ${x.artists
+                          .map((artist) => artist.name)
+                          .join(', ')}`}</li>
                       ))}
                     </ol>
-                  </div>
-                  <div>
-                    <p>{`Average duration: ${tracksData.avgDuration}`}</p>
-                    <p>{`Average popularity: ${tracksData.avgPopularity}`}</p>
-                    <p>{`Percent explicit: ${tracksData.pctExplicit}`}</p>
                   </div>
                 </div>
               )}
