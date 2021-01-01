@@ -24,6 +24,7 @@ const timeOptions = [
   { value: 'medium_term', label: '3 months' },
   { value: 'long_term', label: '6 months' },
 ];
+// const axios = require('axios').default;
 
 export default class Home extends Component {
   constructor(props) {
@@ -37,6 +38,7 @@ export default class Home extends Component {
       limit: 20,
       timeRange: 'medium_term',
       view: 'tracks',
+      waiting: false,
     };
   }
 
@@ -98,6 +100,48 @@ export default class Home extends Component {
           // error: 'Failed to authenticate user',
         });
       });
+  }
+
+  async onClickCreatePlaylist() {
+    await this.setState({ waiting: true });
+    const { waiting, tracksData } = this.state;
+    console.log(waiting);
+    const { tracks } = tracksData;
+    const uris = tracks.map((track) => track.uri);
+    const data = { timeRange: 0, tracks: uris };
+    fetch('http://localhost:8888/auth/createTracksPlaylist', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((responseJson) => {
+        console.log(responseJson);
+        this.setState({
+          waiting: false,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          waiting: false,
+        });
+      });
+
+    // try {
+    //   const response = await axios.post('/createTracks', {
+    //     timeRange: 0,
+    //     tracks: uris,
+    //   });
+    //   console.log(response);
+    //   await this.setState({ waiting: false });
+    // } catch (error) {
+    //   console.error(error);
+    // }
   }
 
   render() {
@@ -231,6 +275,12 @@ export default class Home extends Component {
                           .join(', ')}`}</li>
                       ))}
                     </ol>
+                    <button
+                      type="button"
+                      onClick={() => this.onClickCreatePlaylist()}
+                    >
+                      Generate Playlist
+                    </button>
                   </div>
                 </div>
               )}
