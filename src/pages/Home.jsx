@@ -4,8 +4,8 @@ import Dropdown from 'react-dropdown';
 import Header from '../components/Header';
 import PopularitySwarmPlot from '../components/PopularitySwarmPlot';
 import FollowersSwarmPlot from '../components/FollowersSwarmPlot';
-import TracksPopularitySwarmPlot from '../components/TracksPopularitySwarmPlot';
-import DurationSwarmPlot from '../components/DurationSwarmPlot';
+// import TracksPopularitySwarmPlot from '../components/TracksPopularitySwarmPlot';
+// import DurationSwarmPlot from '../components/DurationSwarmPlot';
 import './Home.scss';
 
 import 'react-dropdown/style.css';
@@ -216,16 +216,25 @@ export default class Home extends Component {
               {view === 'artists' ? (
                 <div>
                   <div>
-                    <p>{`Average followers: ${artistsData.avgFollowers}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
-                      <FollowersSwarmPlot data={artists} />
-                    </div>
                     <p>{`Average popularity: ${artistsData.avgPopularity}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
-                      <PopularitySwarmPlot data={artists} />
+                      <PopularitySwarmPlot data={artists} isTracks="false" />
+                    </div>
+                    <p>{`Average followers: ${artistsData.avgFollowers}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <FollowersSwarmPlot data={artists} isTracks="false" />
                     </div>
                   </div>
                   <div>
+                    <p>Top Genres</p>
+                    <ol>
+                      {aggGenres.slice(0, 5).map((genre) => (
+                        <li key={`${genre[0]}`}>{`${genre[0]}`}</li> // ${genre[1]}
+                      ))}
+                    </ol>
+                  </div>
+                  <div>
+                    <p>Artists</p>
                     <ol>
                       {artists.map((x) => (
                         // <li
@@ -235,31 +244,22 @@ export default class Home extends Component {
                       ))}
                     </ol>
                   </div>
-                  <div>
-                    <p>Top Genres</p>
-                    <ol>
-                      {aggGenres.slice(0, 5).map((genre) => (
-                        <li
-                          key={`${genre[0]}`}
-                        >{`${genre[0]}  ${genre[1]}`}</li>
-                      ))}
-                    </ol>
-                  </div>
                 </div>
               ) : (
                 <div>
                   <div>
-                    <p>{`Average duration: ${tracksData.avgDuration}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
-                      <DurationSwarmPlot data={tracks} />
-                    </div>
                     <p>{`Average popularity: ${tracksData.avgPopularity}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
-                      <TracksPopularitySwarmPlot data={tracks} />
+                      <PopularitySwarmPlot data={tracks} isTracks="true" />
+                    </div>
+                    <p>{`Average duration: ${tracksData.avgDuration}`}</p>
+                    <div style={{ height: '300px', width: '700px' }}>
+                      <FollowersSwarmPlot data={tracks} isTracks="true" />
                     </div>
                     <p>{`Percent explicit: ${tracksData.pctExplicit}`}</p>
                   </div>
                   <div>
+                    <p>Tracks</p>
                     <ol>
                       {tracks.map((x) => (
                         // <li

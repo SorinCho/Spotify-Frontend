@@ -38,7 +38,7 @@ const TracksPopularitySwarmPlot = ({ data }) => (
       tickSize: 10,
       tickPadding: 5,
       tickRotation: 0,
-      legend: 'TracksPopularity',
+      legend: 'Popularity',
       legendPosition: 'middle',
       legendOffset: 46,
     }}

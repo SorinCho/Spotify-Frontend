@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const process = (data) => {
+const processArtists = (data) => {
   const limit = data.length;
   return data.map((artist, i) => ({
     id: artist.name,
@@ -15,10 +15,21 @@ const process = (data) => {
     volume: ((limit - i) / limit) * 30,
   }));
 };
-const PopularitySwarmPlot = ({ data }) => (
+
+const processTracks = (data) => {
+  const limit = data.length;
+  return data.map((track, i) => ({
+    id: track.name,
+    group: 'Track',
+    popularity: track.popularity,
+    volume: ((limit - i) / limit) * 30,
+  }));
+};
+
+const PopularitySwarmPlot = ({ data, isTracks }) => (
   <ResponsiveSwarmPlot
-    data={process(data)}
-    groups={['Artist']}
+    data={isTracks === 'true' ? processTracks(data) : processArtists(data)}
+    groups={isTracks === 'true' ? ['Track'] : ['Artist']}
     value="popularity"
     valueFormat="d"
     valueScale={{ type: 'linear', min: 0, max: 100, reverse: false }}
@@ -49,6 +60,7 @@ const PopularitySwarmPlot = ({ data }) => (
 
 PopularitySwarmPlot.propTypes = {
   data: PropTypes.array, // eslint-disable-line
+  isTracks: PropTypes.bool, // eslint-disable-line
 };
 
 export default PopularitySwarmPlot;

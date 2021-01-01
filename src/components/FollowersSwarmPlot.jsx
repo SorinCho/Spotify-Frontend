@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const process = (data) => {
+const processFollowers = (data) => {
   const limit = data.length;
   return data.map((artist, i) => ({
     id: artist.name,
@@ -15,11 +15,20 @@ const process = (data) => {
     volume: ((limit - i) / limit) * 30,
   }));
 };
-const FollowersSwarmPlot = ({ data /* see data tab */ }) => (
+const processDuration = (data) => {
+  const limit = data.length;
+  return data.map((track, i) => ({
+    id: track.name,
+    group: 'Track',
+    duration: track.duration_ms,
+    volume: ((limit - i) / limit) * 30,
+  }));
+};
+const FollowersSwarmPlot = ({ data, isTracks }) => (
   <ResponsiveSwarmPlot
-    data={process(data)}
-    groups={['Artist']}
-    value="followers"
+    data={isTracks === 'true' ? processDuration(data) : processFollowers(data)}
+    groups={isTracks === 'true' ? ['Track'] : ['Artist']}
+    value={isTracks === 'true' ? 'duration' : 'followers'}
     valueFormat="d"
     valueScale={{ type: 'linear', min: 'auto', max: 'auto', reverse: false }}
     size={{ key: 'volume', values: [4, 20], sizes: [6, 20] }}
@@ -49,6 +58,7 @@ const FollowersSwarmPlot = ({ data /* see data tab */ }) => (
 
 FollowersSwarmPlot.propTypes = {
   data: PropTypes.array, // eslint-disable-line
+  isTracks: PropTypes.bool, // eslint-disable-line
 };
 
 export default FollowersSwarmPlot;
