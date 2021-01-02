@@ -23,9 +23,9 @@ const limitOptions = [
   { value: 50, label: '50' },
 ];
 const timeOptions = [
-  { value: 'short_term', label: '1 month' },
-  { value: 'medium_term', label: '6 months' },
-  { value: 'long_term', label: 'All Time' },
+  { value: 'short', label: '1 month' },
+  { value: 'medium', label: '6 months' },
+  { value: 'long', label: 'All Time' },
 ];
 
 export default class Home extends Component {
@@ -38,7 +38,7 @@ export default class Home extends Component {
       tracksData: {},
       artistsData: {},
       limit: 20,
-      timeRange: 'medium_term',
+      timeRange: 'medium',
       view: 'tracks',
       waiting: false,
     };
@@ -55,17 +55,17 @@ export default class Home extends Component {
 
   handleLimitClick(limit) {
     const { value } = limit;
-    this.setState({ limit: value }, this.handleUpdate);
+    this.setState({ limit: value });
   }
 
   handleTimeRangeClick(timeRange) {
     const { value } = timeRange;
-    this.setState({ timeRange: value }, this.handleUpdate);
+    this.setState({ timeRange: value });
   }
 
   handleViewClick(view) {
     const { value } = view;
-    this.setState({ view: value }, this.handleUpdate);
+    this.setState({ view: value });
   }
 
   handleUpdate() {
@@ -106,9 +106,9 @@ export default class Home extends Component {
 
   async onClickCreatePlaylist() {
     await this.setState({ waiting: true });
-    const { waiting, tracksData } = this.state;
+    const { waiting, tracksData, timeRange } = this.state;
     console.log(waiting);
-    const { tracks } = tracksData;
+    const tracks = tracksData[timeRange];
     const uris = tracks.map((track) => track.uri);
     const data = { timeRange: 0, tracks: uris };
     fetch('http://localhost:8888/auth/createTracksPlaylist', {
@@ -142,9 +142,10 @@ export default class Home extends Component {
       artistsData,
       tracksData,
       view,
+      timeRange,
     } = this.state;
-    const { tracks } = tracksData;
-    const { artists } = artistsData;
+    const tracks = tracksData[timeRange];
+    const artists = artistsData[timeRange];
     console.log(tracks);
     return (
       <div className="big-wrapper">
