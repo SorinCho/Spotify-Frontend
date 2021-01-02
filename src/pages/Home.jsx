@@ -273,8 +273,16 @@ export default class Home extends Component {
                       type="button"
                       onClick={() => this.onClickCreatePlaylist()}
                       id="create"
+                      disabled={waiting}
                     >
-                      Create Playlist
+                      {/* {loading && (
+                        <i
+                          className="fa fa-refresh fa-spin"
+                          style={{ marginRight: '5px' }}
+                        />
+                      )} */}
+                      {waiting && <span>Creating Playlist...</span>}
+                      {!waiting && <span>Create Playlist</span>}
                     </button>
                   </div>
                 </div>
