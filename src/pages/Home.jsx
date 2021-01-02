@@ -8,7 +8,7 @@ import 'react-dropdown/style.css';
 import {
   avgDuration,
   avgPopularity,
-  pctExplicit,
+  pctExplicit, // eslint-disable-line
   avgFollowers,
   aggGenres,
 } from '../services/calculations';
@@ -35,8 +35,12 @@ export default class Home extends Component {
       // error: null,
       authenticated: false,
       userData: {},
-      tracksData: {},
-      artistsData: {},
+      tracksData: {
+        medium: [],
+      },
+      artistsData: {
+        medium: [],
+      },
       limit: 20,
       timeRange: 'medium',
       view: 'tracks',
@@ -69,9 +73,6 @@ export default class Home extends Component {
   }
 
   handleUpdate() {
-    const { limit, timeRange, view } = this.state;
-    const data = { limit, timeRange, view };
-    // console.log(data);
     fetch('http://localhost:8888/auth/login/success', {
       method: 'POST',
       credentials: 'include',
@@ -80,7 +81,6 @@ export default class Home extends Component {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Credentials': true,
       },
-      body: JSON.stringify(data),
     })
       .then((response) => {
         if (response.status === 200) return response.json();
@@ -95,8 +95,9 @@ export default class Home extends Component {
           artistsData: responseJson.artistsData,
         });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        // eslint-disable-line
+        // console.log(error);
         this.setState({
           authenticated: false,
           // error: 'Failed to authenticate user',
@@ -106,11 +107,10 @@ export default class Home extends Component {
 
   async onClickCreatePlaylist() {
     await this.setState({ waiting: true });
-    const { waiting, tracksData, timeRange } = this.state;
-    console.log(waiting);
-    const tracks = tracksData[timeRange];
+    const { tracksData, timeRange, limit } = this.state;
+    const tracks = tracksData[timeRange].slice(0, limit);
     const uris = tracks.map((track) => track.uri);
-    const data = { timeRange: 0, tracks: uris };
+    const data = { timeRange, tracks: uris };
     fetch('http://localhost:8888/auth/createTracksPlaylist', {
       method: 'POST',
       credentials: 'include',
@@ -143,10 +143,11 @@ export default class Home extends Component {
       tracksData,
       view,
       timeRange,
+      limit,
+      waiting,
     } = this.state;
-    const tracks = tracksData[timeRange];
-    const artists = artistsData[timeRange];
-    console.log(tracks);
+    const tracks = tracksData[timeRange].slice(0, limit);
+    const artists = artistsData[timeRange].slice(0, limit);
     return (
       <div className="big-wrapper">
         <div>
@@ -154,9 +155,7 @@ export default class Home extends Component {
             <h1>Spotify Unwrapped</h1>
           ) : (
             <div className="big-wrapper">
-              {/* <h1>You have login succcessfully!</h1> */}
               <h2>{`Welcome ${userData.display_name}!`}</h2>
-              {/* <h3>{`Followers: ${userData.followers.total}`}</h3> */}
               <img
                 alt="profile"
                 src={userData.images[0].url}
