@@ -250,7 +250,7 @@ export default class Home extends Component {
                     <div style={{ height: '300px', width: '700px' }}>
                       <FollowersSwarmPlot data={tracks} isTracks="true" />
                     </div>
-                    <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p>
+                    {/* <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p> */}
                   </div>
                   <div>
                     <p>Tracks</p>
