@@ -1,14 +1,17 @@
-// import API from '../services/base';
 import React, { Component } from 'react';
 import Dropdown from 'react-dropdown';
 import Header from '../components/Header';
 import PopularitySwarmPlot from '../components/PopularitySwarmPlot';
 import FollowersSwarmPlot from '../components/FollowersSwarmPlot';
-// import TracksPopularitySwarmPlot from '../components/TracksPopularitySwarmPlot';
-// import DurationSwarmPlot from '../components/DurationSwarmPlot';
 import './Home.scss';
-
 import 'react-dropdown/style.css';
+import {
+  avgDuration,
+  avgPopularity,
+  pctExplicit,
+  avgFollowers,
+  aggGenres,
+} from '../services/calculations';
 
 const viewOptions = [
   { value: 'tracks', label: 'Tracks' },
@@ -21,10 +24,9 @@ const limitOptions = [
 ];
 const timeOptions = [
   { value: 'short_term', label: '1 month' },
-  { value: 'medium_term', label: '3 months' },
-  { value: 'long_term', label: '6 months' },
+  { value: 'medium_term', label: '6 months' },
+  { value: 'long_term', label: 'All Time' },
 ];
-// const axios = require('axios').default;
 
 export default class Home extends Component {
   constructor(props) {
@@ -131,17 +133,6 @@ export default class Home extends Component {
           waiting: false,
         });
       });
-
-    // try {
-    //   const response = await axios.post('/createTracks', {
-    //     timeRange: 0,
-    //     tracks: uris,
-    //   });
-    //   console.log(response);
-    //   await this.setState({ waiting: false });
-    // } catch (error) {
-    //   console.error(error);
-    // }
   }
 
   render() {
@@ -153,13 +144,13 @@ export default class Home extends Component {
       view,
     } = this.state;
     const { tracks } = tracksData;
-    const { artists, aggGenres } = artistsData;
+    const { artists } = artistsData;
     console.log(tracks);
     return (
       <div className="big-wrapper">
         <div>
           {!authenticated ? (
-            <h1>Spotify Habits</h1>
+            <h1>Spotify Unwrapped</h1>
           ) : (
             <div className="big-wrapper">
               {/* <h1>You have login succcessfully!</h1> */}
@@ -216,11 +207,11 @@ export default class Home extends Component {
               {view === 'artists' ? (
                 <div>
                   <div>
-                    <p>{`Average popularity: ${artistsData.avgPopularity}`}</p>
+                    <p>{`Average popularity: ${avgPopularity(artists)}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
                       <PopularitySwarmPlot data={artists} isTracks="false" />
                     </div>
-                    <p>{`Average followers: ${artistsData.avgFollowers}`}</p>
+                    <p>{`Average followers: ${avgFollowers(artists)}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
                       <FollowersSwarmPlot data={artists} isTracks="false" />
                     </div>
@@ -228,9 +219,11 @@ export default class Home extends Component {
                   <div>
                     <p>Top Genres</p>
                     <ol>
-                      {aggGenres.slice(0, 5).map((genre) => (
-                        <li key={`${genre[0]}`}>{`${genre[0]}`}</li> // ${genre[1]}
-                      ))}
+                      {aggGenres(artists)
+                        .slice(0, 5)
+                        .map((genre) => (
+                          <li key={`${genre[0]}`}>{`${genre[0]}`}</li> // ${genre[1]}
+                        ))}
                     </ol>
                   </div>
                   <div>
@@ -248,15 +241,15 @@ export default class Home extends Component {
               ) : (
                 <div>
                   <div>
-                    <p>{`Average popularity: ${tracksData.avgPopularity}`}</p>
+                    <p>{`Average popularity: ${avgPopularity(tracks)}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
                       <PopularitySwarmPlot data={tracks} isTracks="true" />
                     </div>
-                    <p>{`Average duration: ${tracksData.avgDuration}`}</p>
+                    <p>{`Average duration: ${avgDuration(tracks)}`}</p>
                     <div style={{ height: '300px', width: '700px' }}>
                       <FollowersSwarmPlot data={tracks} isTracks="true" />
                     </div>
-                    <p>{`Percent explicit: ${tracksData.pctExplicit}`}</p>
+                    <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p>
                   </div>
                   <div>
                     <p>Tracks</p>
@@ -278,8 +271,9 @@ export default class Home extends Component {
                     <button
                       type="button"
                       onClick={() => this.onClickCreatePlaylist()}
+                      id="create"
                     >
-                      Generate Playlist
+                      Create Playlist
                     </button>
                   </div>
                 </div>
