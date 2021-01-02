@@ -121,14 +121,14 @@ export default class Home extends Component {
       },
       body: JSON.stringify(data),
     })
-      .then((responseJson) => {
-        console.log(responseJson);
+      .then((response) => {
+        if (response.status === 200) alert('Playlist successfully created!');
         this.setState({
           waiting: false,
         });
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        alert('Error when creating playlist');
         this.setState({
           waiting: false,
         });
