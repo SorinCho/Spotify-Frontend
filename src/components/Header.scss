@@ -5,11 +5,28 @@
   padding: 0;
 }
 
+button{
+  outline: none;
+  border: none;
+  transition: 0.3s;
+}
+button:hover {
+  
+}
+button:focus { }
+button:active { }
+
+
 #logout {
   // position: absolute;
   width: 215px;
   height: 61px;
   background: #FFCC81;
+  font-size: 24px;
+}
+
+#logout:hover {
+  background: #f8a529;
 }
 
 #login {
@@ -20,4 +37,10 @@
   top: 350px;
 
   background: #ABFF9D;
+  font-size: 24px;
+
+}
+
+#login:hover {
+  background: #4fff30
 }
