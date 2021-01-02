@@ -58,7 +58,7 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
 
 FollowersSwarmPlot.propTypes = {
   data: PropTypes.array, // eslint-disable-line
-  isTracks: PropTypes.bool, // eslint-disable-line
+  isTracks: PropTypes.string, // eslint-disable-line
 };
 
 export default FollowersSwarmPlot;
