@@ -3,7 +3,6 @@
 .big-wrapper {
   display: flex;
   box-sizing: border-box;
-  padding: 1em;
   align-items: center;
   justify-content: center;
   flex-direction: column;
@@ -12,31 +11,54 @@
   max-width: 100vw;
 }
 
-.home-page {
+.sub-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
+.home-page {
+  width: 100%;
 }
 
 @include media('<phone') {
+  .big-wrapper {
+    padding: 1em;
+  }
   h1 {
     font-size: 30px;
   }
   #select-bar {
-    font-size: 20px;
+    font-size: 17px;
+    // flex-direction: column;
+  }
+  .swarmplot {
+    height: 600px;
   }
 }
 
 @include media('>=phone') {
+  .big-wrapper {
+    padding: 2em;
+  }
   h1 {
     font-size: 50px;
   }
   #select-bar {
     font-size: 40px;
   }
+  .swarmplot {
+    height: 300px;
+  }
 }
 
+h1 {
+  text-align: center;
+}
 #select-bar {
   display: flex;
-  flex-direction: column;
+  
 }
 
 .sub-select {
@@ -85,20 +107,26 @@
 
 .dropdown-control-limit {
   // padding: 0px 20px 0px 10px !important;
-  margin-right: 10px !important;
+  // margin-right: 10px !important;
 }
 
 .dropdown-arrow {
 
 }
 
+.data {
+  width: 100%;
+  padding: 1em 0em 1em 0em;
+  max-width: 800px;
+}
 .plot-container {
   max-width: 100%;
 }
-.swarmplot {
-  height: 300px;
-  // width: 100%;
+
+.averages {
+  text-align: center;
 }
+
 
 li {
   max-width: 100%;

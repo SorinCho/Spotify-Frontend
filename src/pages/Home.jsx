@@ -154,7 +154,7 @@ export default class Home extends Component {
           {!authenticated ? (
             <h1>Spotify Unwrapped</h1>
           ) : (
-            <div className="big-wrapper">
+            <div className="sub-wrapper">
               <h2>{`Welcome ${userData.display_name}!`}</h2>
               <img
                 alt="profile"
@@ -209,13 +209,17 @@ export default class Home extends Component {
                 </div>
               </div>
               {view === 'artists' ? (
-                <div>
+                <div className="data">
                   <div className="plot-container">
-                    <p>{`Average popularity: ${avgPopularity(artists)}`}</p>
+                    <p className="averages">{`Average popularity: ${avgPopularity(
+                      artists
+                    )}`}</p>
                     <div className="swarmplot">
                       <PopularitySwarmPlot data={artists} isTracks="false" />
                     </div>
-                    <p>{`Average followers: ${avgFollowers(artists)}`}</p>
+                    <p className="averages">{`Average followers: ${avgFollowers(
+                      artists
+                    )}`}</p>
                     <div className="swarmplot">
                       <FollowersSwarmPlot data={artists} isTracks="false" />
                     </div>
@@ -243,13 +247,17 @@ export default class Home extends Component {
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className="data">
                   <div className="plot-container">
-                    <p>{`Average popularity: ${avgPopularity(tracks)}`}</p>
+                    <p className="averages">{`Average popularity: ${avgPopularity(
+                      tracks
+                    )}`}</p>
                     <div className="swarmplot">
                       <PopularitySwarmPlot data={tracks} isTracks="true" />
                     </div>
-                    <p>{`Average duration: ${avgDuration(tracks)}`}</p>
+                    <p className="averages">{`Average duration: ${avgDuration(
+                      tracks
+                    )}`}</p>
                     <div className="swarmplot">
                       <FollowersSwarmPlot data={tracks} isTracks="true" />
                     </div>
@@ -259,11 +267,6 @@ export default class Home extends Component {
                     <p>Tracks</p>
                     <ol>
                       {tracks.map((x) => (
-                        // <li
-                        //   key={`track-${x.name}`}
-                        //   className={`${x.explicit}`}
-                        // >{`${x.name} - ${x.artists[0].name}
-                        // ${x.duration_ms}    ${x.explicit}    ${x.popularity}`}</li>
                         <li
                           key={`track-${x.name}`}
                           className={`${x.explicit}`}
