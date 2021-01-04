@@ -3,6 +3,7 @@ import Dropdown from 'react-dropdown';
 import Header from '../components/Header';
 import PopularitySwarmPlot from '../components/PopularitySwarmPlot';
 import FollowersSwarmPlot from '../components/FollowersSwarmPlot';
+import ErrorMessage from '../components/ErrorMessage';
 import './Home.scss';
 import 'react-dropdown/style.css';
 import {
@@ -34,6 +35,7 @@ export default class Home extends Component {
     this.state = {
       // error: null,
       authenticated: false,
+      error: null,
       userData: {},
       tracksData: {
         medium: [],
@@ -101,6 +103,7 @@ export default class Home extends Component {
         this.setState({
           authenticated: false,
           // error: 'Failed to authenticate user',
+          error: 'Failed to authenticate user',
         });
       });
   }
@@ -145,6 +148,7 @@ export default class Home extends Component {
       timeRange,
       limit,
       waiting,
+      error,
     } = this.state;
     const tracks = tracksData[timeRange].slice(0, limit);
     const artists = artistsData[timeRange].slice(0, limit);
@@ -300,6 +304,7 @@ export default class Home extends Component {
           authenticated={authenticated}
           handleNotAuthenticated={this.handleNotAuthenticated}
         />
+        <ErrorMessage message={error} />
       </div>
     );
   }
