@@ -150,7 +150,7 @@ export default class Home extends Component {
     const artists = artistsData[timeRange].slice(0, limit);
     return (
       <div className="big-wrapper">
-        <div>
+        <div className="home-page">
           {!authenticated ? (
             <h1>Spotify Unwrapped</h1>
           ) : (
@@ -162,57 +162,61 @@ export default class Home extends Component {
                 style={{ width: '0px' }}
               />
               <div id="select-bar">
-                <div className="select-text">Top</div>
-                <Dropdown
-                  options={limitOptions}
-                  value={limitOptions[1]}
-                  onChange={(e) => this.handleLimitClick(e)}
-                  placeholder="Select an option"
-                  className="dropdown-class"
-                  controlClassName="dropdown-control"
-                  placeholderClassName="dropdown-placeholder"
-                  menuClassName="dropdown-menu"
-                  arrowClassName="dropdown"
-                  arrowClosed={<span className="arrow-closed" />}
-                  arrowOpen={<span className="arrow-open" />}
-                />
-                <Dropdown
-                  options={viewOptions}
-                  value={viewOptions[0]}
-                  onChange={(e) => this.handleViewClick(e)}
-                  placeholder="Select an option"
-                  className="dropdown-class"
-                  controlClassName="dropdown-control"
-                  placeholderClassName="dropdown-placeholder"
-                  menuClassName="dropdown-menu"
-                  arrowClassName="dropdown"
-                  arrowClosed={<span className="arrow-closed" />}
-                  arrowOpen={<span className="arrow-open" />}
-                />
-                <div className="select-text">Last</div>
-                <Dropdown
-                  options={timeOptions}
-                  value={timeOptions[1]}
-                  onChange={(e) => this.handleTimeRangeClick(e)}
-                  placeholder="Select an option"
-                  className="dropdown-class"
-                  controlClassName="dropdown-control dropdown-control-limit"
-                  placeholderClassName="dropdown-placeholder"
-                  menuClassName="dropdown-menu"
-                  arrowClassName="dropdown"
-                  arrowClosed={<span className="arrow-closed" />}
-                  arrowOpen={<span className="arrow-open" />}
-                />
+                <div className="sub-select">
+                  <div className="select-text">Top</div>
+                  <Dropdown
+                    options={limitOptions}
+                    value={limitOptions[1]}
+                    onChange={(e) => this.handleLimitClick(e)}
+                    placeholder="Select an option"
+                    className="dropdown-class"
+                    controlClassName="dropdown-control"
+                    placeholderClassName="dropdown-placeholder"
+                    menuClassName="dropdown-menu"
+                    arrowClassName="dropdown"
+                    arrowClosed={<span className="arrow-closed" />}
+                    arrowOpen={<span className="arrow-open" />}
+                  />
+                  <Dropdown
+                    options={viewOptions}
+                    value={viewOptions[0]}
+                    onChange={(e) => this.handleViewClick(e)}
+                    placeholder="Select an option"
+                    className="dropdown-class"
+                    controlClassName="dropdown-control"
+                    placeholderClassName="dropdown-placeholder"
+                    menuClassName="dropdown-menu"
+                    arrowClassName="dropdown"
+                    arrowClosed={<span className="arrow-closed" />}
+                    arrowOpen={<span className="arrow-open" />}
+                  />
+                </div>
+                <div className="sub-select">
+                  <div className="select-text">Last</div>
+                  <Dropdown
+                    options={timeOptions}
+                    value={timeOptions[1]}
+                    onChange={(e) => this.handleTimeRangeClick(e)}
+                    placeholder="Select an option"
+                    className="dropdown-class"
+                    controlClassName="dropdown-control dropdown-control-limit"
+                    placeholderClassName="dropdown-placeholder"
+                    menuClassName="dropdown-menu"
+                    arrowClassName="dropdown"
+                    arrowClosed={<span className="arrow-closed" />}
+                    arrowOpen={<span className="arrow-open" />}
+                  />
+                </div>
               </div>
               {view === 'artists' ? (
                 <div>
-                  <div>
+                  <div className="plot-container">
                     <p>{`Average popularity: ${avgPopularity(artists)}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
+                    <div className="swarmplot">
                       <PopularitySwarmPlot data={artists} isTracks="false" />
                     </div>
                     <p>{`Average followers: ${avgFollowers(artists)}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
+                    <div className="swarmplot">
                       <FollowersSwarmPlot data={artists} isTracks="false" />
                     </div>
                   </div>
@@ -240,13 +244,13 @@ export default class Home extends Component {
                 </div>
               ) : (
                 <div>
-                  <div>
+                  <div className="plot-container">
                     <p>{`Average popularity: ${avgPopularity(tracks)}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
+                    <div className="swarmplot">
                       <PopularitySwarmPlot data={tracks} isTracks="true" />
                     </div>
                     <p>{`Average duration: ${avgDuration(tracks)}`}</p>
-                    <div style={{ height: '300px', width: '700px' }}>
+                    <div className="swarmplot">
                       <FollowersSwarmPlot data={tracks} isTracks="true" />
                     </div>
                     {/* <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p> */}
