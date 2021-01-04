@@ -1,11 +1,8 @@
 import React from 'react';
 import { ResponsiveSwarmPlot } from '@nivo/swarmplot';
 import PropTypes from 'prop-types';
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
+import withSizes from 'react-sizes';
+
 const processArtists = (data) => {
   const limit = data.length;
   return data.map((artist, i) => ({
@@ -26,7 +23,11 @@ const processTracks = (data) => {
   }));
 };
 
-const PopularitySwarmPlot = ({ data, isTracks }) => (
+const mapSizesToProps = ({ width }) => ({
+  isMobile: width < 576,
+});
+
+const PopularitySwarmPlot = ({ data, isTracks, isMobile }) => (
   <ResponsiveSwarmPlot
     data={isTracks === 'true' ? processTracks(data) : processArtists(data)}
     groups={isTracks === 'true' ? ['Track'] : ['Artist']}
@@ -34,7 +35,7 @@ const PopularitySwarmPlot = ({ data, isTracks }) => (
     valueFormat="d"
     valueScale={{ type: 'linear', min: 0, max: 100, reverse: false }}
     size={{ key: 'volume', values: [4, 20], sizes: [6, 20] }}
-    layout="horizontal"
+    layout={isMobile ? 'vertical' : 'horizontal'}
     simulationIterations={100}
     borderColor={{
       from: 'color',
@@ -43,7 +44,11 @@ const PopularitySwarmPlot = ({ data, isTracks }) => (
         ['opacity', 0.5],
       ],
     }}
-    margin={{ top: 80, right: 100, bottom: 80, left: 100 }}
+    margin={
+      isMobile
+        ? { top: 40, right: 50, bottom: 40, left: 50 }
+        : { top: 60, right: 100, bottom: 90, left: 100 }
+    }
     axisBottom={{
       orient: 'bottom',
       tickSize: 10,
@@ -61,6 +66,7 @@ const PopularitySwarmPlot = ({ data, isTracks }) => (
 PopularitySwarmPlot.propTypes = {
   data: PropTypes.array, // eslint-disable-line
   isTracks: PropTypes.string, // eslint-disable-line
+  isMobile: PropTypes.bool, // eslint-disable-line
 };
 
-export default PopularitySwarmPlot;
+export default withSizes(mapSizesToProps)(PopularitySwarmPlot);

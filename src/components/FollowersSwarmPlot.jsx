@@ -1,11 +1,8 @@
 import React from 'react';
 import { ResponsiveSwarmPlot } from '@nivo/swarmplot';
 import PropTypes from 'prop-types';
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
+import withSizes from 'react-sizes';
+
 const processFollowers = (data) => {
   const limit = data.length;
   return data.map((artist, i) => ({
@@ -24,7 +21,12 @@ const processDuration = (data) => {
     volume: ((limit - i) / limit) * 30,
   }));
 };
-const FollowersSwarmPlot = ({ data, isTracks }) => (
+
+const mapSizesToProps = ({ width }) => ({
+  isMobile: width < 576,
+});
+
+const FollowersSwarmPlot = ({ data, isTracks, isMobile }) => (
   <ResponsiveSwarmPlot
     data={isTracks === 'true' ? processDuration(data) : processFollowers(data)}
     groups={isTracks === 'true' ? ['Track'] : ['Artist']}
@@ -32,7 +34,7 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
     valueFormat={isTracks === 'true' ? '.2f' : '.2f'}
     valueScale={{ type: 'linear', min: 'auto', max: 'auto', reverse: false }}
     size={{ key: 'volume', values: [4, 20], sizes: [6, 20] }}
-    layout="horizontal"
+    layout={isMobile ? 'vertical' : 'horizontal'}
     simulationIterations={100}
     borderColor={{
       from: 'color',
@@ -41,7 +43,11 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
         ['opacity', 0.5],
       ],
     }}
-    margin={{ top: 80, right: 100, bottom: 80, left: 100 }}
+    margin={
+      isMobile
+        ? { top: 40, right: 50, bottom: 40, left: 50 }
+        : { top: 60, right: 100, bottom: 90, left: 100 }
+    }
     axisBottom={
       isTracks === 'true'
         ? {
@@ -71,6 +77,7 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
 FollowersSwarmPlot.propTypes = {
   data: PropTypes.array, // eslint-disable-line
   isTracks: PropTypes.string, // eslint-disable-line
+  isMobile: PropTypes.bool, // eslint-disable-line
 };
 
-export default FollowersSwarmPlot;
+export default withSizes(mapSizesToProps)(FollowersSwarmPlot);
