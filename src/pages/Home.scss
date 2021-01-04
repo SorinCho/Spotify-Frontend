@@ -6,8 +6,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  font-family: 'Gothic A1', Arial, sans-serif;
-  min-height: 100vh;
+  
   max-width: 100vw;
 }
 
@@ -24,23 +23,30 @@
 
 @include media('<phone') {
   .big-wrapper {
-    padding: 1em;
+    padding: 1em 1em 0em 1em;
   }
   h1 {
     font-size: 30px;
   }
+  h2 {
+    font-size: 20px;
+  }
   #select-bar {
-    font-size: 17px;
+    font-size: 20px;
     // flex-direction: column;
   }
   .swarmplot {
     height: 600px;
   }
+  .dropdown-control {
+    padding: 0px 0px 0px 0px !important;
+    margin: 0px 5px 0px 5px !important;
+  }
 }
 
 @include media('>=phone') {
   .big-wrapper {
-    padding: 2em;
+    padding: 2em 2em 0em 2em;
   }
   h1 {
     font-size: 50px;
@@ -50,6 +56,10 @@
   }
   .swarmplot {
     height: 300px;
+  }
+  .dropdown-control {
+    padding: 0px 5px 0px 5px !important;
+    margin: 0px 5px 0px 5px !important;
   }
 }
 
@@ -82,8 +92,6 @@ h1 {
 .dropdown-control {
   border: none !important;
   border-radius: 0px !important;
-  padding: 0px 5px 0px 5px !important;
-  margin: 0px 5px 0px 5px !important;
   // border-bottom: 3px black solid;
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.7) !important;
   color:rgba(0, 0, 0, 0.5);
@@ -93,31 +101,14 @@ h1 {
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.7) !important;
 }
 
-.dropdown-placeholder {
-  // text-decoration: underline !important;
-}
-
-.dropdown-placeholder:hover {
-  // text-decoration: bold !important;
-}
-
-.dropdown-menu {
-  // box-sizing: inherit !important;
-}
-
-.dropdown-control-limit {
-  // padding: 0px 20px 0px 10px !important;
-  // margin-right: 10px !important;
-}
-
-.dropdown-arrow {
-
-}
-
 .data {
   width: 100%;
   padding: 1em 0em 1em 0em;
   max-width: 800px;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+  
 }
 .plot-container {
   max-width: 100%;
@@ -133,8 +124,23 @@ li {
   text-overflow: ellipsis;
 }
 
-#create {
+.track-name {
+
 }
+
+.track-artist {
+  color: gray
+}
+
+.create-container {
+  text-align: center;
+}
+
+#create {
+  
+}
+
+
 #create:hover {
   background-color: darkgrey;
 }

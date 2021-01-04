@@ -21,19 +21,37 @@ button:active { }
 
 @include media('<phone') {
   button {
-    width: 160px;
-    height: 50px;
     font-size: 18px;
     border-radius: 10px;
+    width: 180px;
+    height: 40px;
+  }
+
+  #logout {
+    width: 150px;
+  }
+  #login {
+    width: 160px;
+    height: 50px;
   }
 }
 
 @include media('>=phone') {
   button {
+    font-size: 18px;
+    border-radius: 10px;
+    width: 180px;
+    height: 40px;
+  }
+  
+  #logout {
+    width: 150px;
+  }
+
+  #login {
     width: 215px;
     height: 61px;
     font-size: 24px;
-    border-radius: 10px;
   }
 }
 

@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Gothic A1', Arial, sans-serif;
+}
