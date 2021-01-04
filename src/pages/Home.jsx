@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Dropdown from 'react-dropdown';
-import Header from '../components/Header';
+import PropTypes from 'prop-types';
 import PopularitySwarmPlot from '../components/PopularitySwarmPlot';
 import FollowersSwarmPlot from '../components/FollowersSwarmPlot';
 import ErrorMessage from '../components/ErrorMessage';
@@ -33,8 +33,6 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // error: null,
-      authenticated: false,
       error: null,
       userData: {},
       tracksData: {
@@ -46,7 +44,7 @@ export default class Home extends Component {
       limit: 20,
       timeRange: 'medium',
       view: 'tracks',
-      waiting: false,
+      waitingPlaylist: false,
     };
   }
 
@@ -54,10 +52,6 @@ export default class Home extends Component {
     // Fetch does not send cookies. So you should add credentials: 'include'
     this.handleUpdate();
   }
-
-  handleNotAuthenticated = () => {
-    this.setState({ authenticated: false });
-  };
 
   handleLimitClick(limit) {
     const { value } = limit;
@@ -74,7 +68,8 @@ export default class Home extends Component {
     this.setState({ view: value });
   }
 
-  handleUpdate() {
+  async handleUpdate() {
+    const { handleNotAuthenticated, handleAuthenticated } = this.props;
     fetch('http://localhost:8888/auth/login/success', {
       method: 'POST',
       credentials: 'include',
@@ -90,26 +85,23 @@ export default class Home extends Component {
       })
       .then((responseJson) => {
         // console.log(responseJson);
+        handleAuthenticated();
         this.setState({
-          authenticated: true,
           userData: responseJson.userData,
           tracksData: responseJson.tracksData,
           artistsData: responseJson.artistsData,
         });
       })
       .catch(() => {
-        // eslint-disable-line
-        // console.log(error);
+        handleNotAuthenticated();
         this.setState({
-          authenticated: false,
-          // error: 'Failed to authenticate user',
           error: 'Failed to authenticate user',
         });
       });
   }
 
   async onClickCreatePlaylist() {
-    await this.setState({ waiting: true });
+    await this.setState({ waitingPlaylist: true });
     const { tracksData, timeRange, limit } = this.state;
     const tracks = tracksData[timeRange].slice(0, limit);
     const uris = tracks.map((track) => track.uri);
@@ -127,27 +119,26 @@ export default class Home extends Component {
       .then((response) => {
         if (response.status === 200) alert('Playlist successfully created!');
         this.setState({
-          waiting: false,
+          waitingPlaylist: false,
         });
       })
       .catch(() => {
         alert('Error when creating playlist');
         this.setState({
-          waiting: false,
+          waitingPlaylist: false,
         });
       });
   }
 
   render() {
     const {
-      authenticated,
       userData,
       artistsData,
       tracksData,
       view,
       timeRange,
       limit,
-      waiting,
+      waitingPlaylist,
       error,
     } = this.state;
     const tracks = tracksData[timeRange].slice(0, limit);
@@ -155,155 +146,146 @@ export default class Home extends Component {
     return (
       <div className="big-wrapper">
         <div className="home-page">
-          {!authenticated ? (
-            <h1>Spotify Unwrapped</h1>
-          ) : (
-            <div className="sub-wrapper">
-              <h2>{`Welcome ${userData.display_name}!`}</h2>
-              <img
-                alt="profile"
-                src={userData.images[0].url}
-                style={{ width: '0px' }}
-              />
-              <div id="select-bar">
-                <div className="sub-select">
-                  <div className="select-text">Top</div>
-                  <Dropdown
-                    options={limitOptions}
-                    value={limitOptions[1]}
-                    onChange={(e) => this.handleLimitClick(e)}
-                    placeholder="Select an option"
-                    className="dropdown-class"
-                    controlClassName="dropdown-control"
-                    placeholderClassName="dropdown-placeholder"
-                    menuClassName="dropdown-menu"
-                    arrowClassName="dropdown"
-                    arrowClosed={<span className="arrow-closed" />}
-                    arrowOpen={<span className="arrow-open" />}
-                  />
-                  <Dropdown
-                    options={viewOptions}
-                    value={viewOptions[0]}
-                    onChange={(e) => this.handleViewClick(e)}
-                    placeholder="Select an option"
-                    className="dropdown-class"
-                    controlClassName="dropdown-control"
-                    placeholderClassName="dropdown-placeholder"
-                    menuClassName="dropdown-menu"
-                    arrowClassName="dropdown"
-                    arrowClosed={<span className="arrow-closed" />}
-                    arrowOpen={<span className="arrow-open" />}
-                  />
+          <div className="sub-wrapper">
+            <h2>{`Welcome ${userData.display_name}!`}</h2>
+            <div id="select-bar">
+              <div className="sub-select">
+                <div className="select-text">Top</div>
+                <Dropdown
+                  options={limitOptions}
+                  value={limitOptions[1]}
+                  onChange={(e) => this.handleLimitClick(e)}
+                  placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
+                />
+                <Dropdown
+                  options={viewOptions}
+                  value={viewOptions[0]}
+                  onChange={(e) => this.handleViewClick(e)}
+                  placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
+                />
+              </div>
+              <div className="sub-select">
+                <div className="select-text">Last</div>
+                <Dropdown
+                  options={timeOptions}
+                  value={timeOptions[1]}
+                  onChange={(e) => this.handleTimeRangeClick(e)}
+                  placeholder="Select an option"
+                  className="dropdown-class"
+                  controlClassName="dropdown-control dropdown-control-limit"
+                  placeholderClassName="dropdown-placeholder"
+                  menuClassName="dropdown-menu"
+                  arrowClassName="dropdown"
+                  arrowClosed={<span className="arrow-closed" />}
+                  arrowOpen={<span className="arrow-open" />}
+                />
+              </div>
+            </div>
+            {view === 'artists' ? (
+              <div className="data">
+                <div className="plot-container">
+                  <p className="averages">{`Average popularity: ${avgPopularity(
+                    artists
+                  )}`}</p>
+                  <div className="swarmplot">
+                    <PopularitySwarmPlot data={artists} isTracks="false" />
+                  </div>
+                  <p className="averages">{`Average followers: ${avgFollowers(
+                    artists
+                  )}`}</p>
+                  <div className="swarmplot">
+                    <FollowersSwarmPlot data={artists} isTracks="false" />
+                  </div>
                 </div>
-                <div className="sub-select">
-                  <div className="select-text">Last</div>
-                  <Dropdown
-                    options={timeOptions}
-                    value={timeOptions[1]}
-                    onChange={(e) => this.handleTimeRangeClick(e)}
-                    placeholder="Select an option"
-                    className="dropdown-class"
-                    controlClassName="dropdown-control dropdown-control-limit"
-                    placeholderClassName="dropdown-placeholder"
-                    menuClassName="dropdown-menu"
-                    arrowClassName="dropdown"
-                    arrowClosed={<span className="arrow-closed" />}
-                    arrowOpen={<span className="arrow-open" />}
-                  />
+                <div>
+                  <p>Top Genres</p>
+                  <ol>
+                    {aggGenres(artists)
+                      .slice(0, 5)
+                      .map((genre) => (
+                        <li key={`${genre[0]}`}>{`${genre[0]}`}</li> // ${genre[1]}
+                      ))}
+                  </ol>
+                </div>
+                <div>
+                  <p>Artists</p>
+                  <ol>
+                    {artists.map((x) => (
+                      // <li
+                      //   key={`artist-${x.name}`}
+                      // >{`${x.name}    ${x.followers.total}   ${x.popularity} ${x.genres}`}</li>
+                      <li key={`artist-${x.name}`}>{`${x.name}`}</li>
+                    ))}
+                  </ol>
                 </div>
               </div>
-              {view === 'artists' ? (
-                <div className="data">
-                  <div className="plot-container">
-                    <p className="averages">{`Average popularity: ${avgPopularity(
-                      artists
-                    )}`}</p>
-                    <div className="swarmplot">
-                      <PopularitySwarmPlot data={artists} isTracks="false" />
-                    </div>
-                    <p className="averages">{`Average followers: ${avgFollowers(
-                      artists
-                    )}`}</p>
-                    <div className="swarmplot">
-                      <FollowersSwarmPlot data={artists} isTracks="false" />
-                    </div>
+            ) : (
+              <div className="data">
+                <div className="plot-container">
+                  <p className="averages">{`Average popularity: ${avgPopularity(
+                    tracks
+                  )}`}</p>
+                  <div className="swarmplot">
+                    <PopularitySwarmPlot data={tracks} isTracks="true" />
                   </div>
-                  <div>
-                    <p>Top Genres</p>
-                    <ol>
-                      {aggGenres(artists)
-                        .slice(0, 5)
-                        .map((genre) => (
-                          <li key={`${genre[0]}`}>{`${genre[0]}`}</li> // ${genre[1]}
-                        ))}
-                    </ol>
+                  <p className="averages">{`Average duration: ${avgDuration(
+                    tracks
+                  )} minutes`}</p>
+                  <div className="swarmplot">
+                    <FollowersSwarmPlot data={tracks} isTracks="true" />
                   </div>
-                  <div>
-                    <p>Artists</p>
-                    <ol>
-                      {artists.map((x) => (
-                        // <li
-                        //   key={`artist-${x.name}`}
-                        // >{`${x.name}    ${x.followers.total}   ${x.popularity} ${x.genres}`}</li>
-                        <li key={`artist-${x.name}`}>{`${x.name}`}</li>
-                      ))}
-                    </ol>
-                  </div>
+                  {/* <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p> */}
                 </div>
-              ) : (
-                <div className="data">
-                  <div className="plot-container">
-                    <p className="averages">{`Average popularity: ${avgPopularity(
-                      tracks
-                    )}`}</p>
-                    <div className="swarmplot">
-                      <PopularitySwarmPlot data={tracks} isTracks="true" />
-                    </div>
-                    <p className="averages">{`Average duration: ${avgDuration(
-                      tracks
-                    )}`}</p>
-                    <div className="swarmplot">
-                      <FollowersSwarmPlot data={tracks} isTracks="true" />
-                    </div>
-                    {/* <p>{`Percent explicit: ${pctExplicit(tracks)}`}</p> */}
-                  </div>
-                  <div>
-                    <p>Tracks</p>
-                    <ol>
-                      {tracks.map((x) => (
-                        <li
-                          key={`track-${x.name}`}
-                          className={`${x.explicit}`}
-                        >{`${x.name} - ${x.artists
-                          .map((artist) => artist.name)
-                          .join(', ')}`}</li>
-                      ))}
-                    </ol>
-                    <button
-                      type="button"
-                      onClick={() => this.onClickCreatePlaylist()}
-                      id="create"
-                      disabled={waiting}
-                    >
-                      {/* {loading && (
+                <div>
+                  <p>Tracks</p>
+                  <ol>
+                    {tracks.map((x) => (
+                      <li key={`track-${x.name}`} className={`${x.explicit}`}>
+                        <span className="track-name">{x.name}</span>
+
+                        <span className="track-artist">
+                          {` - `}
+                          {x.artists.map((artist) => artist.name).join(', ')}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                <div className="create-container">
+                  <button
+                    type="button"
+                    onClick={() => this.onClickCreatePlaylist()}
+                    id="create"
+                    disabled={waitingPlaylist}
+                  >
+                    {/* {loading && (
                         <i
                           className="fa fa-refresh fa-spin"
                           style={{ marginRight: '5px' }}
                         />
                       )} */}
-                      {waiting && <span>Creating Playlist...</span>}
-                      {!waiting && <span>Create Playlist</span>}
-                    </button>
-                  </div>
+                    {waitingPlaylist && <span>Creating Playlist...</span>}
+                    {!waitingPlaylist && <span>Create Playlist</span>}
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
-        <Header
-          authenticated={authenticated}
-          handleNotAuthenticated={this.handleNotAuthenticated}
-        />
         <ErrorMessage message={error} />
       </div>
     );

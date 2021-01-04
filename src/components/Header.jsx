@@ -47,8 +47,5 @@ export default class Header extends Component {
 
 Header.propTypes = {
   authenticated: PropTypes.bool.isRequired,
-  handleNotAuthenticated: PropTypes.func,
-};
-Header.defaultProps = {
-  handleNotAuthenticated: null,
+  handleNotAuthenticated: PropTypes.func.isRequired,
 };
