@@ -11,7 +11,7 @@ const processFollowers = (data) => {
   return data.map((artist, i) => ({
     id: artist.name,
     group: 'Artist',
-    followers: artist.followers.total,
+    followers: artist.followers.total / 1000000,
     volume: ((limit - i) / limit) * 30,
   }));
 };
@@ -20,7 +20,7 @@ const processDuration = (data) => {
   return data.map((track, i) => ({
     id: track.name,
     group: 'Track',
-    duration: track.duration_ms,
+    duration: track.duration_ms / 60000,
     volume: ((limit - i) / limit) * 30,
   }));
 };
@@ -29,7 +29,7 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
     data={isTracks === 'true' ? processDuration(data) : processFollowers(data)}
     groups={isTracks === 'true' ? ['Track'] : ['Artist']}
     value={isTracks === 'true' ? 'duration' : 'followers'}
-    valueFormat="d"
+    valueFormat={isTracks === 'true' ? '.2f' : '.2f'}
     valueScale={{ type: 'linear', min: 'auto', max: 'auto', reverse: false }}
     size={{ key: 'volume', values: [4, 20], sizes: [6, 20] }}
     layout="horizontal"
@@ -42,15 +42,27 @@ const FollowersSwarmPlot = ({ data, isTracks }) => (
       ],
     }}
     margin={{ top: 80, right: 100, bottom: 80, left: 100 }}
-    axisBottom={{
-      orient: 'bottom',
-      tickSize: 10,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: 'Followers',
-      legendPosition: 'middle',
-      legendOffset: 46,
-    }}
+    axisBottom={
+      isTracks === 'true'
+        ? {
+            orient: 'bottom',
+            tickSize: 10,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'Duration (minutes)',
+            legendPosition: 'middle',
+            legendOffset: 46,
+          }
+        : {
+            orient: 'bottom',
+            tickSize: 10,
+            tickPadding: 5,
+            tickRotation: 0,
+            legend: 'Followers (millions)',
+            legendPosition: 'middle',
+            legendOffset: 46,
+          }
+    }
     motionStiffness={50}
     motionDamping={10}
   />
