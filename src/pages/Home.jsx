@@ -309,3 +309,8 @@ export default class Home extends Component {
     );
   }
 }
+
+Home.propTypes = {
+  handleAuthenticated: PropTypes.func.isRequired,
+  handleNotAuthenticated: PropTypes.func.isRequired,
+};
