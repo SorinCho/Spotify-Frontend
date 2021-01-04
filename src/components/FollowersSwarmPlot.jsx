@@ -35,6 +35,7 @@ const FollowersSwarmPlot = ({ data, isTracks, isMobile }) => (
     valueScale={{ type: 'linear', min: 'auto', max: 'auto', reverse: false }}
     size={{ key: 'volume', values: [4, 20], sizes: [6, 20] }}
     layout={isMobile ? 'vertical' : 'horizontal'}
+    // colors={{ scheme: 'set2' }}
     simulationIterations={100}
     borderColor={{
       from: 'color',
