@@ -3,18 +3,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Header.scss';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 export default class Header extends Component {
   handleSignInClick = () => {
     // Authenticate using via passport api in the backend
     // Open Twitter login page
     // Upon successful login, a cookie session will be stored in the client
-    window.open('http://localhost:8888/auth/spotify', '_self');
+    window.open(`${BASE_URL}/auth/spotify`, '_self');
   };
 
   handleLogoutClick = () => {
     // Logout using Twitter passport api
     // Set authenticated state to false in the HomePage
-    window.open('http://localhost:8888/auth/logout', '_self');
+    window.open(`${BASE_URL}/auth/logout`, '_self');
     const { handleNotAuthenticated } = this.props;
     handleNotAuthenticated();
     // this.props.handleNotAuthenticated();

@@ -1,10 +1,11 @@
 import React from 'react';
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 const handleSignInClick = () => {
   // Authenticate using via passport api in the backend
   // Open Twitter login page
   // Upon successful login, a cookie session will be stored in the client
-  window.open('http://localhost:8888/auth/spotify', '_self');
+  window.open(`${BASE_URL}/auth/spotify`, '_self');
 };
 
 const Login = () => (

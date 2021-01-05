@@ -28,6 +28,7 @@ const timeOptions = [
   { value: 'medium', label: '6 months' },
   { value: 'long', label: 'All Time' },
 ];
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export default class Home extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ export default class Home extends Component {
   handleLogoutClick = () => {
     // Logout using Twitter passport api
     // Set authenticated state to false in the HomePage
-    window.open('http://localhost:8888/auth/logout', '_self');
+    window.open(`${BASE_URL}/auth/logout`, '_self');
     const { handleNotAuthenticated } = this.props;
     handleNotAuthenticated();
     // this.props.handleNotAuthenticated();
@@ -79,7 +80,7 @@ export default class Home extends Component {
 
   async handleUpdate() {
     const { handleNotAuthenticated, handleAuthenticated } = this.props;
-    fetch('http://localhost:8888/auth/login/success', {
+    fetch(`${BASE_URL}/auth/login/success`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -115,7 +116,7 @@ export default class Home extends Component {
     const tracks = tracksData[timeRange].slice(0, limit);
     const uris = tracks.map((track) => track.uri);
     const data = { timeRange, tracks: uris };
-    fetch('http://localhost:8888/auth/createTracksPlaylist', {
+    fetch(`${BASE_URL}/auth/createTracksPlaylist`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -289,8 +290,14 @@ export default class Home extends Component {
                           style={{ marginRight: '5px' }}
                         />
                       )} */}
-                      {waitingPlaylist && <span>Creating Playlist...</span>}
-                      {!waitingPlaylist && <span>Create Playlist</span>}
+                      {waitingPlaylist && (
+                        <span className="create-text">
+                          Creating Playlist...
+                        </span>
+                      )}
+                      {!waitingPlaylist && (
+                        <span className="create-text">Create Playlist</span>
+                      )}
                     </button>
                   </div>
                 </div>
