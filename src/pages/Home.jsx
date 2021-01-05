@@ -13,6 +13,7 @@ import {
   avgFollowers,
   aggGenres,
 } from '../services/calculations';
+import { getData, createPlaylist } from '../services/base';
 
 const viewOptions = [
   { value: 'tracks', label: 'Tracks' },
@@ -80,21 +81,12 @@ export default class Home extends Component {
 
   async handleUpdate() {
     const { handleNotAuthenticated, handleAuthenticated } = this.props;
-    fetch(`${BASE_URL}/auth/login/success`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Credentials': true,
-      },
-    })
+    getData()
       .then((response) => {
-        if (response.status === 200) return response.json();
+        if (response.status === 200) return response.data;
         throw new Error('failed to authenticate user');
       })
       .then((responseJson) => {
-        // console.log(responseJson);
         handleAuthenticated();
         this.setState({
           userData: responseJson.userData,
@@ -113,27 +105,16 @@ export default class Home extends Component {
   async onClickCreatePlaylist() {
     await this.setState({ waitingPlaylist: true });
     const { tracksData, timeRange, limit } = this.state;
-    const tracks = tracksData[timeRange].slice(0, limit);
-    const uris = tracks.map((track) => track.uri);
-    const data = { timeRange, tracks: uris };
-    fetch(`${BASE_URL}/auth/createTracksPlaylist`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Credentials': true,
-      },
-      body: JSON.stringify(data),
-    })
+    createPlaylist(tracksData, timeRange, limit)
       .then((response) => {
         if (response.status === 200) alert('Playlist successfully created!'); // eslint-disable-next-line
         this.setState({
           waitingPlaylist: false,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         alert('Error when creating playlist'); // eslint-disable-next-line
+        console.log(err);
         this.setState({
           waitingPlaylist: false,
         });
