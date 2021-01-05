@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Header from './components/Header';
+import './components/Header.scss';
 
 export default function AppRouter() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -12,6 +12,7 @@ export default function AppRouter() {
         <Switch>
           <Route path="/home">
             <Home
+              authenticated={authenticated}
               handleNotAuthenticated={() => setAuthenticated(false)}
               handleAuthenticated={() => setAuthenticated(true)}
             />
@@ -20,10 +21,6 @@ export default function AppRouter() {
             <Login />
           </Route>
         </Switch>
-        <Header
-          authenticated={authenticated}
-          handleNotAuthenticated={() => setAuthenticated(false)}
-        />
       </div>
     </Router>
   );
