@@ -127,13 +127,13 @@ export default class Home extends Component {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        if (response.status === 200) alert('Playlist successfully created!');
+        if (response.status === 200) alert('Playlist successfully created!'); // eslint-disable-next-line
         this.setState({
           waitingPlaylist: false,
         });
       })
       .catch(() => {
-        alert('Error when creating playlist');
+        alert('Error when creating playlist'); // eslint-disable-next-line
         this.setState({
           waitingPlaylist: false,
         });
