@@ -298,7 +298,9 @@ export default class Home extends Component {
                           </span>
                         )}
                         {!waitingPlaylist && (
-                          <span className="create-text">Create Playlist</span>
+                          <span className="create-text button-text">
+                            Create Playlist
+                          </span>
                         )}
                       </button>
                     </div>
@@ -307,9 +309,10 @@ export default class Home extends Component {
                 <button
                   id="logout"
                   type="button"
+                  className="log"
                   onClick={this.handleLogoutClick}
                 >
-                  Logout
+                  <span className="button-text">LOGOUT</span>
                 </button>
               </div>
             </div>
@@ -320,8 +323,13 @@ export default class Home extends Component {
         {!loading && !authenticated && (
           <div className="big-wrapper">
             <h1>Spotify Unwrapped</h1>
-            <button id="login" type="button" onClick={this.handleSignInClick}>
-              Login
+            <button
+              id="login"
+              type="button"
+              className="log"
+              onClick={this.handleSignInClick}
+            >
+              <span className="button-text">LOGIN</span>
             </button>
           </div>
         )}

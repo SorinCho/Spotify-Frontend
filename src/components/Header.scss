@@ -13,6 +13,9 @@ button{
   border: none;
   font-family: inherit;
   transition: 0.3s;
+  color: white;
+  line-height: 1;
+  font-family: Arial, sans-serif
 }
 button:hover {
   
@@ -28,12 +31,18 @@ button:active { }
     height: 40px;
   }
 
+  .log {
+    
+  }
+
   #logout {
     width: 150px;
+    letter-spacing: 1px;
   }
   #login {
     width: 160px;
     height: 50px;
+    letter-spacing: 2px;
   }
 }
 
@@ -47,29 +56,57 @@ button:active { }
   
   #logout {
     width: 150px;
+    letter-spacing: 1px;
   }
 
   #login {
     width: 215px;
     height: 61px;
     font-size: 24px;
+    letter-spacing: 4px;
   }
 }
 
+.log {
+  font-weight: 700;
+  
+}
+
+#create {
+  background: #3335bd;
+}
+
+#create:hover {
+  background: #4044fc;
+}
+
+#create:active {
+  background: #242683;
+}
 
 #logout {
-  background: #FFCC81;
+  background: #bb6060;
   margin: 2em 0 2em 0;
+  font-weight: 600;
 }
 
 #logout:hover {
-  background: #f8a529;
+  background: #e26363;
+}
+
+#logout:active {
+  background: #a03e3e;
 }
 
 #login {
-  background: #ABFF9D;
+  background: #06b850;
 }
 
 #login:hover {
-  background: #4fff30
+  background: #09db61
 }
+
+#login:active {
+  background: #068a3d
+}
+
